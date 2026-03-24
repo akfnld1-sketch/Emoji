@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>치비콘 스튜디오 🐾</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fff8fe;
+  --surface: #ffffff;
+  --card: #fef5ff;
+  --accent1: #f43f7a;
+  --accent2: #9333ea;
+  --accent3: #0ea5e9;
+  --accent4: #f97316;
+  --accent5: #10b981;
+  --text: #1e0a3c;
+  --text-dim: #7c5fa8;
+  --text-light: #b39dca;
+  --border: rgba(147,51,234,0.14);
+  --shadow: rgba(147,51,234,0.08);
+  --step1: #f43f7a;
+  --step2: #9333ea;
+  --step3: #0ea5e9;
+  --step4: #10b981;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans KR','Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 800px 500px at 0% 0%, rgba(244,63,122,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 600px 600px at 100% 0%, rgba(147,51,234,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 500px 400px at 50% 100%, rgba(14,165,233,0.05) 0%,transparent 60%);
+}
+header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 40px;
+  background:rgba(255,248,254,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 20px var(--shadow);
+}
+.logo{
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:24px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.header-right{display:flex;align-items:center;gap:12px;}
+.kakao-badge{
+  font-size:11px;font-weight:700;letter-spacing:0.5px;
+  padding:5px 12px;border-radius:20px;
+  background:linear-gradient(90deg,#fee500,#ffd600);
+  color:#1e0a3c;
+}
+.step-nav{display:flex;gap:4px;}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:white;cursor:pointer;
+  transition:all 0.2s;opacity:0.3;
+}
+.step-dot.done{opacity:1;}
+.step-dot.active{opacity:1;transform:scale(1.15);box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.workflow{
+  position:relative;z-index:5;
+  max-width:900px;margin:0 auto;
+  padding:36px 20px 20px;
+}
+.wf-steps{display:flex;align-items:center;gap:0;margin-bottom:32px;}
+.wf-step{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;
+  position:relative;cursor:pointer;
+}
+.wf-step::after{
+  content:'';position:absolute;top:22px;left:50%;width:100%;height:3px;
+  background:var(--border);z-index:-1;
+}
+.wf-step:last-child::after{display:none;}
+.wf-num{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:white;
+  position:relative;z-index:1;transition:all 0.3s;
+}
+.wf-step.inactive .wf-num{background:#e8dff5;color:var(--text-light);}
+.wf-step.active .wf-num{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,0.15);}
+.wf-step.done .wf-num{opacity:0.75;}
+.wf-label{font-size:12px;font-weight:700;color:var(--text-dim);text-align:center;line-height:1.4;}
+.wf-step.active .wf-label,.wf-step.done .wf-label{color:var(--text);}
+.panels{
+  position:relative;z-index:5;
+  max-width:1200px;margin:0 auto;
+  padding:0 20px 80px;
+}
+.panel{display:none;animation:fadeUp 0.35s ease;}
+.panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.panel-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:32px;
+  box-shadow:0 4px 30px var(--shadow);
+  margin-bottom:20px;
+}
+.panel-title{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:24px;
+}
+.panel-title .step-badge{
+  width:36px;height:36px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:15px;color:white;flex-shrink:0;
+}
+.panel-title h2{font-size:20px;font-weight:800;}
+.panel-title p{font-size:13px;color:var(--text-dim);margin-top:2px;}
+.cat-layout{display:grid;grid-template-columns:200px 1fr 1fr;gap:16px;min-height:340px;}
+.cat-col-label{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:10px;padding-left:4px;
+}
+.cat-col{display:flex;flex-direction:column;}
+.cat-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;border-radius:14px;
+  border:1.5px solid transparent;background:var(--card);
+  cursor:pointer;transition:all 0.18s;
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;
+  color:var(--text-dim);margin-bottom:6px;text-align:left;width:100%;
+}
+.cat-btn:hover{border-color:var(--border);color:var(--text);}
+.cat-btn.active{font-weight:700;color:white;}
+.cat-btn .c-icon{font-size:18px;flex-shrink:0;}
+.cat-btn .c-arrow{margin-left:auto;font-size:10px;opacity:0.5;}
+.l3-chips-wrap{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;}
+.l3-chip{
+  padding:7px 14px;border-radius:20px;
+  border:1.5px solid var(--border);background:var(--card);
+  color:var(--text-dim);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.18s;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.l3-chip:hover{border-color:var(--accent4);color:var(--accent4);}
+.l3-chip.selected{background:var(--accent4);border-color:var(--accent4);color:white;font-weight:700;}
+.cat-empty{
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-light);font-size:13px;text-align:center;
+  border:2px dashed var(--border);border-radius:16px;padding:20px;
+  height:100%;min-height:80px;
+}
+.master-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-group{margin-bottom:18px;}
+.form-label{font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block;}
+.form-input,.form-textarea{
+  width:100%;padding:12px 16px;
+  border:1.5px solid var(--border);border-radius:14px;
+  background:var(--card);color:var(--text);
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;
+  transition:border-color 0.2s;outline:none;
+}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent2);}
+.form-textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.option-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.option-chip{
+  padding:6px 14px;border-radius:20px;
+  border:1.5px solid var(--border);background:var(--card);
+  color:var(--text-dim);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.18s;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.option-chip:hover{border-color:var(--accent2);color:var(--accent2);}
+.option-chip.on{font-weight:700;color:white;border-color:transparent;}
+.bg-color-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.bg-swatch{
+  width:36px;height:36px;border-radius:10px;cursor:pointer;
+  border:2.5px solid transparent;transition:all 0.18s;position:relative;
+  flex-shrink:0;
+}
+.bg-swatch:hover{transform:scale(1.12);}
+.bg-swatch.selected{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(147,51,234,0.25);}
+.bg-swatch .sw-check{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  font-size:14px;
+}
+.bg-swatch.selected .sw-check{display:flex;}
+.bg-preview{
+  width:100%;height:48px;border-radius:12px;margin-top:8px;
+  border:1px solid var(--border);transition:all 0.3s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:rgba(0,0,0,0.4);
+}
+.master-preview{
+  background:linear-gradient(135deg,rgba(147,51,234,0.05),rgba(14,165,233,0.05));
+  border:2px dashed var(--border);border-radius:20px;
+  padding:24px;display:flex;flex-direction:column;
+}
+.preview-title{font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+.preview-box{
+  flex:1;background:white;border-radius:16px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  min-height:200px;font-size:13px;color:var(--text-light);text-align:center;
+  padding:20px;
+}
+.preview-spec{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;}
+.spec-pill{
+  font-size:10px;padding:3px 8px;border-radius:8px;
+  background:rgba(249,115,22,0.1);color:var(--accent4);font-weight:600;
+}
+.s3-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;}
+.emo-panel{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:18px;
+}
+.emo-panel-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.emo-grid,.sit-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  max-height:380px;overflow-y:auto;
+}
+.emo-grid::-webkit-scrollbar,.sit-grid::-webkit-scrollbar{width:4px;}
+.emo-grid::-webkit-scrollbar-thumb,.sit-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.emo-card{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border-radius:12px;border:1.5px solid transparent;
+  background:white;cursor:pointer;transition:all 0.15s;text-align:center;
+}
+.emo-card:hover{border-color:var(--accent1);}
+.emo-card.selected{border-color:var(--accent1);background:rgba(244,63,122,0.06);}
+.emo-card .ei{font-size:20px;}
+.emo-card .en{font-size:10px;color:var(--text-dim);font-weight:500;line-height:1.2;}
+.emo-card.selected .en{color:var(--accent1);font-weight:700;}
+.tracker-panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;}
+.tracker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.tracker-header h3{font-size:14px;font-weight:800;}
+.tracker-count{
+  font-size:13px;font-weight:800;padding:4px 12px;border-radius:20px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;
+}
+.slot-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:14px;}
+.slot{
+  aspect-ratio:1;border-radius:10px;
+  border:1.5px dashed var(--border);background:white;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:10px;color:var(--text-light);text-align:center;padding:2px;
+  transition:all 0.2s;overflow:hidden;
+}
+.slot.filled{border-style:solid;background:var(--card);}
+.slot .s-icon{font-size:16px;line-height:1;}
+.slot .s-name{font-size:8px;color:var(--text-dim);line-height:1.2;margin-top:2px;}
+.tracker-tip{
+  font-size:12px;color:var(--text-dim);line-height:1.7;
+  padding:12px;background:rgba(14,165,233,0.06);border-radius:12px;
+  border-left:3px solid var(--accent3);
+}
+.s4-top{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.summary-card{
+  background:linear-gradient(135deg,rgba(244,63,122,0.06),rgba(147,51,234,0.06));
+  border:1px solid var(--border);border-radius:18px;padding:20px;
+}
+.summary-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;}
+.summary-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;font-size:13px;gap:8px;}
+.summary-row .sk{color:var(--text-dim);font-weight:500;flex-shrink:0;}
+.summary-row .sv{font-weight:700;color:var(--text);text-align:right;}
+.summary-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.summary-tag{font-size:11px;padding:2px 8px;border-radius:8px;background:rgba(244,63,122,0.1);color:var(--accent1);font-weight:600;}
+.style-panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;}
+.style-row{margin-bottom:14px;}
+.style-row-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+.gen-btn{
+  width:100%;padding:20px;border-radius:18px;border:none;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  color:white;font-size:17px;font-weight:800;cursor:pointer;
+  transition:all 0.25s;letter-spacing:0.5px;
+  font-family:'Noto Sans KR',sans-serif;
+  position:relative;overflow:hidden;
+}
+.gen-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--accent2),var(--accent3));
+  opacity:0;transition:opacity 0.3s;
+}
+.gen-btn:hover::after{opacity:1;}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(244,63,122,0.3);}
+.gen-btn span{position:relative;z-index:1;}
+.output-area{margin-top:20px;}
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.output-header h3{font-size:15px;font-weight:800;}
+.copy-all-btn{
+  padding:7px 16px;border-radius:12px;
+  border:1.5px solid var(--accent3);background:transparent;
+  color:var(--accent3);font-size:12px;font-weight:700;cursor:pointer;
+  transition:all 0.2s;font-family:'Noto Sans KR',sans-serif;
+}
+.copy-all-btn:hover{background:var(--accent3);color:white;}
+.prompt-list{display:flex;flex-direction:column;gap:14px;}
+.prompt-item{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:18px;overflow:hidden;transition:border-color 0.2s;
+}
+.prompt-item:hover{border-color:var(--accent2);}
+.prompt-item-header{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:12px 18px;background:rgba(147,51,234,0.04);
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.prompt-num{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);}
+.prompt-emo-tag{font-size:11px;padding:3px 10px;border-radius:8px;background:rgba(244,63,122,0.1);color:var(--accent1);font-weight:600;}
+.p-copy-btn{
+  padding:4px 10px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text-dim);font-size:11px;font-weight:600;cursor:pointer;
+  transition:all 0.2s;font-family:'Noto Sans KR',sans-serif;margin-left:auto;
+}
+.p-copy-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.prompt-body{padding:16px 18px;}
+.prompt-en{font-size:13px;line-height:1.8;color:var(--text);word-break:break-all;margin-bottom:10px;}
+.prompt-ko{
+  font-size:12px;color:var(--text-dim);line-height:1.6;
+  padding:10px 12px;background:rgba(14,165,233,0.05);border-radius:10px;
+  border-left:3px solid var(--accent3);
+}
+.kakao-spec-bar{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:14px 18px;border-top:1px solid var(--border);
+  background:rgba(249,115,22,0.03);
+}
+.spec-tag{
+  font-size:10px;padding:3px 10px;border-radius:8px;
+  background:rgba(249,115,22,0.1);color:var(--accent4);font-weight:600;
+  border:1px solid rgba(249,115,22,0.2);
+}
+.loading{display:none;text-align:center;padding:40px;color:var(--text-dim);font-size:14px;}
+.loading.on{display:block;}
+.spinner{
+  width:44px;height:44px;margin:0 auto 14px;
+  border:3px solid var(--border);border-top-color:var(--accent1);
+  border-radius:50%;animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
+.nav-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 24px;border-radius:14px;border:none;cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;
+  transition:all 0.2s;
+}
+.nav-prev{background:var(--card);color:var(--text-dim);border:1.5px solid var(--border);}
+.nav-prev:hover{color:var(--text);}
+.nav-next{color:white;}
+.nav-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+.guide-tip{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 16px;border-radius:14px;margin-bottom:20px;
+  background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);
+  font-size:12px;color:var(--text-dim);line-height:1.7;
+}
+.guide-tip .gt-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--accent2);color:white;
+  padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;
+  opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;
+  box-shadow:0 8px 24px rgba(147,51,234,0.3);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:768px){
+  .cat-layout{grid-template-columns:1fr;}
+  .master-grid{grid-template-columns:1fr;}
+  .s3-layout{grid-template-columns:1fr;}
+  .s4-top{grid-template-columns:1fr;}
+  .slot-grid{grid-template-columns:repeat(6,1fr);}
+  header{padding:14px 16px;}
+  .workflow{padding:24px 16px 16px;}
+  .panels{padding:0 16px 60px;}
+  .panel-card{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🐾 치비콘 스튜디오</div>
+  <div class="header-right">
+    <div class="kakao-badge">📱 카카오톡 이모티콘</div>
+    <div class="step-nav" id="stepNav"></div>
+  </div>
+</header>
+
+<div class="workflow">
+  <div class="wf-steps" id="wfSteps"></div>
+</div>
+
+<div class="panels">
+
+  <!-- STEP 1 -->
+  <div class="panel active" id="panel1">
+    <div class="panel-card">
+      <div class="panel-title">
+        <div class="step-badge" style="background:linear-gradient(135deg,var(--step1),#ff8c6b);">1</div>
+        <div><h2>콘셉트 · 카테고리 선택</h2><p>어떤 캐릭터로 이모티콘을 만들지 기획해요</p></div>
+      </div>
+      <div class="guide-tip">
+        <span class="gt-icon">💡</span>
+        <span><strong>대분류 → 소분류</strong> 순으로 클릭하고, 오른쪽에서 세부 캐릭터를 선택하세요. 선택한 캐릭터가 마스터 캐릭터의 기반이 됩니다.</span>
+      </div>
+      <div class="cat-layout">
+        <div class="cat-col">
+          <div class="cat-col-label">대분류</div>
+          <div id="l1List"></div>
+        </div>
+        <div class="cat-col">
+          <div class="cat-col-label">소분류</div>
+          <div id="l2List"><div class="cat-empty">← 대분류를 먼저 선택하세요</div></div>
+        </div>
+        <div class="cat-col">
+          <div class="cat-col-label">세부 캐릭터 선택</div>
+          <div class="l3-chips-wrap" id="l3List"><div class="cat-empty" style="width:100%">← 소분류를 선택하세요</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <div></div>
+      <button class="nav-btn nav-next" style="background:linear-gradient(135deg,var(--step1),var(--step2));" onclick="goStep(2)">다음: 마스터 캐릭터 설정 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="panel" id="panel2">
+    <div class="panel-card">
+      <div class="panel-title">
+        <div class="step-badge" style="background:linear-gradient(135deg,var(--step2),#c084fc);">2</div>
+        <div><h2>마스터 캐릭터 설정</h2><p>리크레프트에서 그릴 캐릭터의 상세 설정을 기획해요</p></div>
+      </div>
+      <div class="guide-tip">
+        <span class="gt-icon">🎨</span>
+        <span><strong>마스터 캐릭터 1종</strong>을 리크레프트/나노바나나로 완성한 뒤, 복사해서 표정·포즈만 바꿔 32종을 만들어요. 여기서 설정한 내용이 4단계 프롬프트에 자동 반영됩니다.</span>
+      </div>
+      <div class="master-grid">
+        <div>
+          <div class="form-group">
+            <label class="form-label">캐릭터 이름 (선택)</label>
+            <input class="form-input" id="charName" placeholder="예: 뽀시래기, 냥이, 하뭉이..." maxlength="20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">성격 · 분위기</label>
+            <div class="option-chips" id="moodChips"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">색상 팔레트</label>
+            <div class="option-chips" id="colorChips"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">치비 비율</label>
+            <div class="option-chips" id="ratioChips"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🖼 배경 스타일</label>
+            <div class="option-chips" id="bgChips"></div>
+            <div id="bgColorPicker" style="display:none;margin-top:10px;">
+              <div class="bg-color-grid" id="bgColorGrid"></div>
+            </div>
+            <div id="bgGradientPicker" style="display:none;margin-top:10px;">
+              <div class="bg-color-grid" id="bgGradientGrid"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">특징 · 포인트 (선택)</label>
+            <input class="form-input" id="charFeature" placeholder="예: 리본 달린 귀, 동그란 안경, 별 무늬 배..." maxlength="50">
+          </div>
+          <div class="form-group">
+            <label class="form-label">추가 메모</label>
+            <textarea class="form-textarea" id="charMemo" placeholder="리크레프트에서 그릴 때 참고할 내용을 자유롭게 적어요..."></textarea>
+          </div>
+        </div>
+        <div class="master-preview">
+          <div class="preview-title">📋 마스터 캐릭터 설정 요약</div>
+          <div class="preview-box" id="masterPreviewBox">설정을 입력하면 여기에 요약이 표시됩니다</div>
+          <div class="preview-spec">
+            <span class="spec-pill">📐 360×360px</span>
+            <span class="spec-pill">🖼 PNG 투명배경</span>
+            <span class="spec-pill">🐾 치비 스타일</span>
+            <span class="spec-pill">✏️ 리크레프트 권장</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn nav-prev" onclick="goStep(1)">← 이전</button>
+      <button class="nav-btn nav-next" style="background:linear-gradient(135deg,var(--step2),var(--step3));" onclick="goStep(3)">다음: 32종 감정·상황 기획 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="panel" id="panel3">
+    <div class="panel-card">
+      <div class="panel-title">
+        <div class="step-badge" style="background:linear-gradient(135deg,var(--step3),#38bdf8);">3</div>
+        <div><h2>32종 감정 · 상황 기획</h2><p>마스터 캐릭터에서 표정/포즈를 바꿀 32종을 선택해요</p></div>
+      </div>
+      <div class="guide-tip">
+        <span class="gt-icon">✅</span>
+        <span>감정과 상황을 합쳐서 <strong>딱 32개</strong>를 선택하세요. 카카오 심사는 32종 세트로 제출합니다. 오른쪽 슬롯에 실시간으로 채워지는 걸 확인하세요.</span>
+      </div>
+      <div class="s3-layout">
+        <div>
+          <div class="emo-panel" style="margin-bottom:12px;">
+            <div class="emo-panel-title" style="color:var(--accent1);">😊 감정 32종</div>
+            <div class="emo-grid" id="emotionGrid"></div>
+          </div>
+          <div class="emo-panel">
+            <div class="emo-panel-title" style="color:var(--accent2);">🎬 상황 32종</div>
+            <div class="sit-grid" id="situationGrid"></div>
+          </div>
+        </div>
+        <div>
+          <div class="tracker-panel">
+            <div class="tracker-header">
+              <h3>📋 선택된 32종 슬롯</h3>
+              <div class="tracker-count" id="slotCount">0 / 32</div>
+            </div>
+            <div class="slot-grid" id="slotGrid"></div>
+            <div class="tracker-tip">
+              <strong>💡 리크레프트 작업 팁</strong><br>
+              마스터 캐릭터 레이어를 복사 → 표정/팔/다리 레이어만 수정 → 배경 투명 PNG로 내보내기. 32종 모두 같은 캐릭터 비율 유지가 핵심입니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn nav-prev" onclick="goStep(2)">← 이전</button>
+      <button class="nav-btn nav-next" style="background:linear-gradient(135deg,var(--step3),var(--step4));" onclick="goStep(4)">다음: 프롬프트 생성 →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="panel" id="panel4">
+    <div class="panel-card">
+      <div class="panel-title">
+        <div class="step-badge" style="background:linear-gradient(135deg,var(--step4),#34d399);">4</div>
+        <div><h2>AI 프롬프트 생성</h2><p>선택한 설정 기반으로 리크레프트 작업용 상세 프롬프트를 생성해요</p></div>
+      </div>
+      <div class="guide-tip">
+        <span class="gt-icon">🖊️</span>
+        <span>생성된 프롬프트를 <strong>리크레프트 작업 참고 가이드</strong>로 활용하거나, Midjourney/DALL-E에 넣어 <strong>러프 스케치 레퍼런스</strong>를 먼저 뽑아볼 수 있어요.</span>
+      </div>
+      <div class="s4-top">
+        <div class="summary-card">
+          <div class="summary-title">📌 기획 요약</div>
+          <div id="summaryContent"></div>
+        </div>
+        <div class="style-panel">
+          <div class="style-row">
+            <div class="style-row-label">🎨 아트 스타일</div>
+            <div class="option-chips" id="styleChips"></div>
+          </div>
+          <div class="style-row">
+            <div class="style-row-label">🌐 프롬프트 언어</div>
+            <div class="option-chips" id="langChips"></div>
+          </div>
+          <div class="style-row">
+            <div class="style-row-label">📦 생성 범위</div>
+            <div class="option-chips" id="rangeChips"></div>
+          </div>
+        </div>
+      </div>
+      <button class="gen-btn" onclick="generatePrompts()"><span>✨ 프롬프트 생성하기</span></button>
+      
+      <div class="output-area" id="outputArea" style="display:none">
+        <div class="output-header">
+          <h3>📋 생성된 프롬프트</h3>
+          <button class="copy-all-btn" onclick="copyAll()">전체 복사</button>
+        </div>
+        <div class="prompt-list" id="promptList"></div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn nav-prev" onclick="goStep(3)">← 이전</button>
+      <button class="nav-btn nav-next" style="background:linear-gradient(135deg,var(--step4),var(--accent3));" onclick="resetAll()">🔄 처음부터 다시</button>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIES = {
+  동물:{icon:'🐾',sub:{
+    강아지:{icon:'🐶',items:['포메라니안','말티즈','비숑프리제','시바이누','골든리트리버','푸들','닥스훈트','진돗개','불독','허스키']},
+    고양이:{icon:'🐱',items:['페르시안','러시안블루','스코티시폴드','뱅갈','메인쿤','아비시니안','봄베이','노르웨이숲','터키쉬앙고라','샴']},
+    토끼:{icon:'🐰',items:['네덜란드 드워프','미니렉스','앙고라','홀랜드롭','라이언헤드','미니렉스','플레미시자이언트','아메리칸퍼지롭','잉글리시스팟','칼리포니안']},
+    쥐:{icon:'🐭',items:['골든햄스터','드워프햄스터','저빌','친칠라','기니피그','다람쥐','날다람쥐','프레리독','슈가글라이더','데구']},
+    새:{icon:'🐦',items:['앵무새','코카티엘','잉꼬','카나리아','문조','십자매','금화조','로리킷','왕관앵무','모란앵무']},
+    파충류:{icon:'🦎',items:['레오파드게코','크레스티드게코','비어드드래곤','카멜레온','블루텅스킹크','볼파이썬','코뿔도마뱀','악어','거북이','이구아나']},
+    물고기:{icon:'🐠',items:['베타','금붕어','구피','네온테트라','디스커스','아로와나','클라운피시','엔젤피쉬','플라티','코리도라스']},
+    곤충:{icon:'🐛',items:['장수풍뎅이','사슴벌레','나비','무당벌레','꿀벌','반딧불이','사마귀','메뚜기','귀뚜라미','애벌레']},
+    야생동물:{icon:'🦁',items:['사자','호랑이','곰','여우','늑대','판다','코알라','코끼리','기린','펭귄']},
+    바다동물:{icon:'🐳',items:['고래','돌고래','문어','해마','바다거북','상어','가오리','해파리','게','바닷가재']},
+    농장동물:{icon:'🐄',items:['소','돼지','양','염소','말','닭','오리','거위','당나귀','라마']},
+    숲속동물:{icon:'🦔',items:['고슴도치','너구리','오소리','수달','족제비','스컹크','비버','아르마딜로','두더지','땅다람쥐']}
+  }},
+  식물:{icon:'🌱',sub:{
+    꽃:{icon:'🌸',items:['벚꽃','장미','해바라기','튤립','라벤더','수국','민들레','코스모스','목련','국화']},
+    나무:{icon:'🌳',items:['소나무','은행나무','단풍나무','벚나무','대나무','야자나무','참나무','버드나무','사과나무','감나무']},
+    다육식물:{icon:'🌵',items:['선인장','에케베리아','알로에','하월시아','세덤','크라슐라','아가베','산세베리아','리톱스','패키피텀']},
+    열대식물:{icon:'🌿',items:['몬스테라','필로덴드론','포토스','스파티필름','칼라데아','아글라오네마','싱고니움','드라세나','야자','고무나무']},
+    채소:{icon:'🥦',items:['당근','브로콜리','토마토','오이','양파','고추','배추','감자','호박','옥수수']},
+    과일:{icon:'🍎',items:['사과','딸기','포도','수박','복숭아','체리','망고','레몬','블루베리','파인애플']}
+  }},
+  사람:{icon:'👥',sub:{
+    남자:{icon:'👦',items:['아기 남자아이','유치원 남자아이','초등학생 남자','중학생 남자','고등학생 남자','20대 청년','30대 남성','40대 아저씨','60대 아버지','70대 할아버지']},
+    여자:{icon:'👧',items:['아기 여자아이','유치원 여자아이','초등학생 여자','중학생 여자','고등학생 여자','20대 여성','30대 여성','40대 아주머니','60대 어머니','70대 할머니']},
+    직업인:{icon:'👨‍💻',items:['의사','간호사','요리사','소방관','경찰관','선생님','프로그래머','디자이너','유튜버','운동선수']},
+    판타지인물:{icon:'🧙',items:['마법사','기사','요정','마녀','엘프','드워프','뱀파이어','늑대인간','천사','악마']}
+  }},
+  컨셉:{icon:'🎭',sub:{
+    직장인:{icon:'💼',items:['신입사원','팀장','야근 직장인','회의중 직원','점심시간 직장인','퇴근하는 직장인','월급날 직장인','혼나는 직원','칭찬받는 직원','재택근무 직장인']},
+    연인:{icon:'💑',items:['첫만남 커플','데이트 커플','싸우는 커플','화해하는 커플','장거리 연인','프러포즈 커플','기념일 커플','질투하는 연인','애교부리는 연인','이별하는 커플']},
+    학생:{icon:'🎒',items:['유치원생','초등학생','중학생','고등학생','수험생','대학생','MT 대학생','졸업하는 학생','시험망친 학생','공부하는 학생']},
+    가족:{icon:'👨‍👩‍👧',items:['아빠','엄마','할머니','할아버지','아기','형제','자매','남매','임산부','신혼부부']},
+    친구:{icon:'👫',items:['베프 둘','단짝 셋','동네친구','학창시절 친구','술친구','운동친구','게임친구','여행친구','오랜 친구','새로운 친구']},
+    일상:{icon:'🌅',items:['아침에 일어난 사람','출근하는 사람','점심먹는 사람','퇴근하는 사람','저녁먹는 사람','운동하는 사람','쇼핑하는 사람','배달음식 기다리는 사람','넷플릭스 보는 사람','잠자는 사람']},
+    취미:{icon:'🎨',items:['그림그리는 사람','독서하는 사람','요리하는 사람','낚시하는 사람','등산하는 사람','캠핑하는 사람','뜨개질하는 사람','사진찍는 사람','음악듣는 사람','춤추는 사람']},
+    감성:{icon:'🌙',items:['비오는날 우산쓴 사람','카페에서 커피마시는 사람','창가에서 책읽는 사람','별보는 사람','낙엽밟는 사람','눈사람 만드는 사람','꽃밭에서 산책하는 사람','해질녘 바라보는 사람','혼자밥먹는 사람','혼자여행하는 사람']}
+  }},
+  미니어쳐:{icon:'🧸',sub:{
+    용:{icon:'🐉',items:['동양 청룡','서양 화룡','얼음 드래곤','숲 정령 드래곤','달빛 드래곤','아기 드래곤','바다 드래곤','하늘 드래곤','꽃 드래곤','무지개 드래곤']},
+    피규어:{icon:'🗿',items:['로봇 피규어','마법사 피규어','기사 피규어','요정 피규어','마녀 피규어','닌자 피규어','탐험가 피규어','우주인 피규어','바이킹 피규어','사무라이 피규어']},
+    음식캐릭터:{icon:'🍔',items:['햄버거','도넛','케이크','아이스크림','라면','초밥','떡볶이','마카롱','와플','타코야키']},
+    사물캐릭터:{icon:'⭐',items:['별','달','해','구름','무지개','번개','눈결정','꽃잎','하트','다이아몬드']},
+    탈것캐릭터:{icon:'🚀',items:['로켓','자동차','기차','비행기','배','자전거','오토바이','헬리콥터','잠수함','우주선']},
+    요정존재:{icon:'🧚',items:['꽃요정','물요정','숲요정','불꽃요정','빛요정','별요정','달요정','눈요정','바람요정','땅요정']}
+  }}
+};
+
+const EMOTIONS = [
+  {icon:'😊',name:'기쁨'},{icon:'😂',name:'폭소'},{icon:'🥺',name:'슬픔'},
+  {icon:'😡',name:'화남'},{icon:'😍',name:'사랑'},{icon:'😴',name:'졸림'},
+  {icon:'🤔',name:'고민'},{icon:'😳',name:'당황'},{icon:'🥳',name:'신남'},
+  {icon:'😭',name:'대성통곡'},{icon:'😎',name:'쿨함'},{icon:'🤗',name:'설렘'},
+  {icon:'😤',name:'억울함'},{icon:'🙄',name:'귀찮음'},{icon:'😱',name:'충격'},
+  {icon:'🤩',name:'감탄'},{icon:'😋',name:'맛있다'},{icon:'🥱',name:'지루함'},
+  {icon:'🫠',name:'녹아내림'},{icon:'🤭',name:'수줍음'},{icon:'😇',name:'천사같음'},
+  {icon:'🥲',name:'울컥함'},{icon:'😬',name:'민망함'},{icon:'🫨',name:'멘붕'},
+  {icon:'🤑',name:'돈욕심'},{icon:'🥰',name:'포근함'},{icon:'😤',name:'뿌듯함'},
+  {icon:'🫡',name:'결의다짐'},{icon:'🤪',name:'신기함'},{icon:'😏',name:'자신만만'},
+  {icon:'🥹',name:'감동'},{icon:'😶',name:'할말없음'}
+];
+const SITUATIONS = [
+  {icon:'👋',name:'인사하기'},{icon:'💪',name:'응원하기'},{icon:'🎉',name:'축하하기'},
+  {icon:'🙏',name:'감사하기'},{icon:'😔',name:'사과하기'},{icon:'🤝',name:'화해하기'},
+  {icon:'📞',name:'전화하기'},{icon:'💌',name:'메시지보내기'},{icon:'🍽',name:'밥먹기'},
+  {icon:'☕',name:'커피마시기'},{icon:'🏃',name:'달리기'},{icon:'💤',name:'자기'},
+  {icon:'🎮',name:'게임하기'},{icon:'📚',name:'공부하기'},{icon:'💼',name:'일하기'},
+  {icon:'🛒',name:'쇼핑하기'},{icon:'🎵',name:'음악듣기'},{icon:'🌙',name:'굿나잇'},
+  {icon:'🎂',name:'생일파티'},{icon:'🏖',name:'여행가기'},{icon:'💊',name:'아프기'},
+  {icon:'🤸',name:'스트레칭'},{icon:'🍜',name:'라면먹기'},{icon:'📸',name:'사진찍기'},
+  {icon:'🚗',name:'드라이브'},{icon:'🎁',name:'선물주기'},{icon:'🧹',name:'청소하기'},
+  {icon:'🐾',name:'산책하기'},{icon:'💇',name:'미용실가기'},{icon:'🛁',name:'목욕하기'},
+  {icon:'🌸',name:'꽃구경'},{icon:'🍦',name:'아이스크림'}
+];
+const MOODS=['밝고 활발','차분하고 귀여운','엉뚱하고 개성있는','따뜻하고 포근한','쿨하고 시크한','몽글몽글 순진한'];
+const COLORS=['파스텔 핑크','노랑+크림','민트+하늘','보라+라벤더','갈색+베이지','흰색+회색'];
+const RATIOS=['2등신 (극단적 치비)','2.5등신 (일반 치비)','3등신 (약간 큰 머리)'];
+const STYLES=['파스텔 소프트','수채화 느낌','리본 러블리','미니멀 플랫','네온 팝아트','레트로 픽셀'];
+const LANGS=['영어 (EN)','영어+한국어','한국어 위주'];
+const RANGES=['마스터 캐릭터 1종','선택 전체','5개씩 묶음'];
+const BG_TYPES=['투명 배경','흰색 배경','단색 파스텔 배경','그라디언트 배경','패턴/텍스처 배경'];
+const BG_SOLID_COLORS=[
+  {name:'크림',hex:'#fff9f0'},{name:'라이트핑크',hex:'#ffe4ef'},{name:'라벤더',hex:'#f0e8ff'},
+  {name:'민트',hex:'#e0faf4'},{name:'하늘',hex:'#e0f4ff'},{name:'레몬',hex:'#fffbe0'},
+  {name:'피치',hex:'#ffe8d6'},{name:'로즈',hex:'#fce4ec'},{name:'세이지',hex:'#e8f5e9'},
+  {name:'라일락',hex:'#ede7f6'},{name:'코랄',hex:'#ffe0d6'},{name:'아쿠아',hex:'#e0f7fa'},
+];
+const BG_GRADIENTS=[
+  {name:'핑크→라벤더',css:'linear-gradient(135deg,#ffe4ef,#f0e8ff)'},{name:'민트→하늘',css:'linear-gradient(135deg,#e0faf4,#e0f4ff)'},
+  {name:'레몬→피치',css:'linear-gradient(135deg,#fffbe0,#ffe8d6)'},{name:'라벤더→민트',css:'linear-gradient(135deg,#f0e8ff,#e0faf4)'},
+  {name:'핑크→코랄',css:'linear-gradient(135deg,#ffe4ef,#ffe0d6)'},{name:'하늘→라일락',css:'linear-gradient(135deg,#e0f4ff,#ede7f6)'},
+  {name:'크림→레몬',css:'linear-gradient(135deg,#fff9f0,#fffbe0)'},{name:'로즈→피치',css:'linear-gradient(135deg,#fce4ec,#ffe8d6)'},
+];
+const BG_PATTERNS=['도트 패턴','하트 패턴','별 패턴','물결 패턴','체크 패턴','꽃 패턴'];
+const WF=[
+  {num:1,label:'콘셉트\n카테고리',color:'var(--step1)'},
+  {num:2,label:'마스터\n캐릭터 설정',color:'var(--step2)'},
+  {num:3,label:'32종\n감정·상황 기획',color:'var(--step3)'},
+  {num:4,label:'프롬프트\n생성',color:'var(--step4)'},
+];
+
+const S={
+  step:1,l1:null,l2:null,l3:null,
+  mood:'밝고 활발',color:'파스텔 핑크',ratio:'2.5등신 (일반 치비)',
+  bgType:'투명 배경',bgValue:'transparent',bgLabel:'투명',
+  selected:[],
+  style:'파스텔 소프트',lang:'영어 (EN)',range:'마스터 캐릭터 1종'
+};
+
+
+
+function buildWfSteps(){
+  document.getElementById('wfSteps').innerHTML=WF.map(w=>`
+    <div class="wf-step inactive" id="wf${w.num}" onclick="goStep(${w.num})">
+      <div class="wf-num" style="background:${w.color}">${w.num}</div>
+      <div class="wf-label">${w.label.replace('\n','<br>')}</div>
+    </div>`).join('');
+}
+function buildStepNav(){
+  document.getElementById('stepNav').innerHTML=WF.map(w=>`
+    <div class="step-dot" id="dot${w.num}" style="background:${w.color}" onclick="goStep(${w.num})">${w.num}</div>`).join('');
+}
+function updateWfUI(){
+  WF.forEach(w=>{
+    document.getElementById('wf'+w.num).className='wf-step '+(w.num===S.step?'active':w.num<S.step?'done':'inactive');
+    document.getElementById('dot'+w.num).className='step-dot '+(w.num===S.step?'active':w.num<S.step?'done':'');
+  });
+}
+function goStep(n){
+  if(n>=2&&!S.l2){showToast('⚠️ 소분류까지 선택해주세요');return;}
+  if(n>=4&&S.selected.length===0){showToast('⚠️ 감정/상황을 하나 이상 선택해주세요');return;}
+  document.getElementById('panel'+S.step).classList.remove('active');
+  S.step=n;
+  document.getElementById('panel'+S.step).classList.add('active');
+  updateWfUI();
+  if(n===4)updateSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildL1(){
+  const el=document.getElementById('l1List');
+  el.innerHTML=Object.entries(CATEGORIES).map(([name,d])=>`
+    <button class="cat-btn" id="l1-${name}" data-l1="${name}">
+      <span class="c-icon">${d.icon}</span>${name}<span class="c-arrow">›</span>
+    </button>`).join('');
+  el.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>selectL1(btn.dataset.l1));
+  });
+}
+function selectL1(name){
+  S.l1=name;S.l2=null;S.l3=null;
+  document.querySelectorAll('#l1List .cat-btn').forEach(b=>{b.classList.remove('active');b.style.background='';});
+  const btn=document.getElementById('l1-'+name);
+  btn.classList.add('active');btn.style.background='linear-gradient(135deg,var(--step1),#ff8c6b)';
+  const sub=CATEGORIES[name].sub;
+  const l2el=document.getElementById('l2List');
+  l2el.innerHTML=Object.entries(sub).map(([sname,sd])=>`
+    <button class="cat-btn" id="l2-${sname}" data-l2="${sname}">
+      <span class="c-icon">${sd.icon}</span>${sname}<span class="c-arrow">›</span>
+    </button>`).join('');
+  l2el.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>selectL2(btn.dataset.l2));
+  });
+  document.getElementById('l3List').innerHTML='<div class="cat-empty" style="width:100%">← 소분류를 선택하세요</div>';
+}
+function selectL2(name){
+  S.l2=name;S.l3=null;
+  document.querySelectorAll('#l2List .cat-btn').forEach(b=>{b.classList.remove('active');b.style.background='';});
+  const btn=document.getElementById('l2-'+name);
+  btn.classList.add('active');btn.style.background='linear-gradient(135deg,var(--step2),#c084fc)';
+  const items=CATEGORIES[S.l1].sub[name].items;
+  const l3el=document.getElementById('l3List');
+  l3el.innerHTML=items.map(item=>`
+    <div class="l3-chip" data-item="${item}">${item}</div>`).join('');
+  l3el.querySelectorAll('.l3-chip').forEach(chip=>{
+    chip.addEventListener('click',function(){ selectL3(this.dataset.item, this); });
+  });
+}
+function selectL3(name,el){
+  document.querySelectorAll('.l3-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');S.l3=name;updateMasterPreview();
+}
+
+function buildOptionChips(cid,options,key){
+  const el=document.getElementById(cid);if(!el)return;
+  el.innerHTML=options.map(opt=>`
+    <div class="option-chip${S[key]===opt?' on':''}"
+      data-val="${opt}" data-key="${key}" data-cid="${cid}"
+      style="${S[key]===opt?'background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:white':''}"
+      >${opt}</div>`).join('');
+  el.querySelectorAll('.option-chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      selectChip(this.dataset.cid, this.dataset.val, this.dataset.key, this);
+    });
+  });
+}
+function selectChip(cid,val,key,el){
+  S[key]=val;
+  document.querySelectorAll('#'+cid+' .option-chip').forEach(c=>{
+    c.classList.remove('on');c.style.background='';c.style.borderColor='';c.style.color='';
+  });
+  el.classList.add('on');
+  el.style.background='linear-gradient(135deg,var(--accent1),var(--accent2))';
+  el.style.borderColor='transparent';el.style.color='white';
+  updateMasterPreview();
+}
+
+function buildBgChips(){
+  const el=document.getElementById('bgChips');if(!el)return;
+  el.innerHTML=BG_TYPES.map(t=>`
+    <div class="option-chip${S.bgType===t?' on':''}"
+      data-val="${t}" data-key="bgType" data-cid="bgChips"
+      style="${S.bgType===t?'background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:white':''}"
+      >${t}</div>`).join('');
+  el.querySelectorAll('.option-chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      selectBgType(this.dataset.val, this);
+    });
+  });
+  // 기본 미리보기
+  showBgPreview();
+}
+
+function selectBgType(val, el){
+  S.bgType=val;
+  document.querySelectorAll('#bgChips .option-chip').forEach(c=>{
+    c.classList.remove('on');c.style.background='';c.style.borderColor='';c.style.color='';
+  });
+  el.classList.add('on');
+  el.style.background='linear-gradient(135deg,var(--accent1),var(--accent2))';
+  el.style.borderColor='transparent';el.style.color='white';
+
+  // 서브 피커 표시
+  const solidPicker=document.getElementById('bgColorPicker');
+  const gradPicker=document.getElementById('bgGradientPicker');
+  solidPicker.style.display='none';
+  gradPicker.style.display='none';
+
+  if(val==='투명 배경'){ S.bgValue='transparent'; S.bgLabel='투명'; }
+  else if(val==='흰색 배경'){ S.bgValue='#ffffff'; S.bgLabel='흰색'; }
+  else if(val==='단색 파스텔 배경'){
+    solidPicker.style.display='block';
+    buildSwatches('bgColorGrid', BG_SOLID_COLORS, 'hex');
+    S.bgValue=BG_SOLID_COLORS[0].hex; S.bgLabel=BG_SOLID_COLORS[0].name;
+  } else if(val==='그라디언트 배경'){
+    gradPicker.style.display='block';
+    buildSwatches('bgGradientGrid', BG_GRADIENTS, 'css');
+    S.bgValue=BG_GRADIENTS[0].css; S.bgLabel=BG_GRADIENTS[0].name;
+  } else if(val==='패턴/텍스처 배경'){
+    solidPicker.style.display='block';
+    buildPatternChips();
+    S.bgValue='dot pattern'; S.bgLabel='도트 패턴';
+  } else {
+    S.bgValue='transparent'; S.bgLabel='투명/흰색';
+  }
+  showBgPreview();
+  updateMasterPreview();
+}
+
+function buildSwatches(gridId, items, prop){
+  const g=document.getElementById(gridId);
+  g.innerHTML=items.map((item,i)=>`
+    <div class="bg-swatch${i===0?' selected':''}"
+      style="background:${item[prop]}"
+      data-val="${item[prop]}" data-name="${item.name}">
+      <span class="sw-check">✓</span>
+    </div>`).join('');
+  // 미리보기 바
+  if(!g.nextElementSibling || !g.nextElementSibling.classList.contains('bg-preview')){
+    const prev=document.createElement('div');
+    prev.className='bg-preview';prev.id=gridId+'Preview';
+    g.parentNode.insertBefore(prev, g.nextSibling);
+  }
+  g.querySelectorAll('.bg-swatch').forEach(sw=>{
+    sw.addEventListener('click',function(){
+      g.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('selected'));
+      this.classList.add('selected');
+      S.bgValue=this.dataset.val; S.bgLabel=this.dataset.name;
+      showBgPreview();updateMasterPreview();
+    });
+  });
+}
+
+function buildPatternChips(){
+  const g=document.getElementById('bgColorGrid');
+  g.innerHTML=BG_PATTERNS.map((p,i)=>`
+    <div class="option-chip${i===0?' on':''}"
+      data-name="${p}"
+      style="${i===0?'background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:white':''}"
+      >${p}</div>`).join('');
+  g.querySelectorAll('.option-chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      g.querySelectorAll('.option-chip').forEach(c=>{c.classList.remove('on');c.style.background='';c.style.borderColor='';c.style.color='';});
+      this.classList.add('on');this.style.background='linear-gradient(135deg,var(--accent1),var(--accent2))';
+      this.style.borderColor='transparent';this.style.color='white';
+      S.bgValue=this.dataset.name+' background pattern';
+      S.bgLabel=this.dataset.name;
+      updateMasterPreview();
+    });
+  });
+}
+
+function showBgPreview(){
+  // 마스터 프리뷰 박스 배경 반영
+  const box=document.getElementById('masterPreviewBox');
+  if(!box)return;
+  if(S.bgType==='투명 배경') box.style.background='repeating-linear-gradient(45deg,#ccc 0,#ccc 1px,white 0,white 50%) 0/12px 12px';
+  else if(S.bgType==='흰색 배경') box.style.background='white';
+  else if(S.bgType==='단색 파스텔 배경'||S.bgType==='그라디언트 배경') box.style.background=S.bgValue;
+  else box.style.background='repeating-radial-gradient(circle at 0 0,rgba(147,51,234,0.08) 0,rgba(147,51,234,0.08) 2px,transparent 0,transparent 50%) 0 0 / 20px 20px white';
+}
+
+function updateMasterPreview(){
+  const box=document.getElementById('masterPreviewBox');
+  const name=document.getElementById('charName')?.value||'';
+  const feat=document.getElementById('charFeature')?.value||'';
+  if(!S.l2){box.innerHTML='설정을 입력하면 여기에 요약이 표시됩니다';box.style.color='var(--text-light)';return;}
+  const icon=S.l1?CATEGORIES[S.l1].icon:'';
+  box.style.color='var(--text)';
+  box.innerHTML=`<div style="text-align:left;width:100%;font-size:13px;line-height:2.1">
+    <div>🐾 <strong>캐릭터:</strong> ${icon} ${S.l3||S.l2}${name?' · "'+name+'"':''}</div>
+    <div>🎨 <strong>색상:</strong> ${S.color}</div>
+    <div>📐 <strong>비율:</strong> ${S.ratio}</div>
+    <div>🖼 <strong>배경:</strong> ${S.bgLabel||'투명/흰색'}</div>
+    <div>💫 <strong>성격:</strong> ${S.mood}</div>
+    ${feat?'<div>✨ <strong>특징:</strong> '+feat+'</div>':''}
+    <div style="margin-top:10px;padding:8px;background:rgba(147,51,234,0.06);border-radius:8px;font-size:11px;color:var(--text-dim)">
+      리크레프트에서 이 설정으로 마스터 캐릭터 1종을 완성하세요
+    </div>
+  </div>`;
+}
+
+function buildEmotions(){
+  const g=document.getElementById('emotionGrid');
+  g.innerHTML=EMOTIONS.map(e=>`
+    <div class="emo-card" data-icon="${e.icon}" data-name="${e.name}" data-type="emo">
+      <span class="ei">${e.icon}</span><span class="en">${e.name}</span>
+    </div>`).join('');
+  g.querySelectorAll('.emo-card').forEach(card=>{
+    card.addEventListener('click',function(){
+      toggleItem(this.dataset.icon, this.dataset.name, this.dataset.type, this);
+    });
+  });
+}
+function buildSituations(){
+  const g=document.getElementById('situationGrid');
+  g.innerHTML=SITUATIONS.map(s=>`
+    <div class="emo-card" data-icon="${s.icon}" data-name="${s.name}" data-type="sit">
+      <span class="ei">${s.icon}</span><span class="en">${s.name}</span>
+    </div>`).join('');
+  g.querySelectorAll('.emo-card').forEach(card=>{
+    card.addEventListener('click',function(){
+      toggleItem(this.dataset.icon, this.dataset.name, this.dataset.type, this);
+    });
+  });
+}
+function toggleItem(icon,name,type,el){
+  const idx=S.selected.findIndex(x=>x.name===name&&x.type===type);
+  if(idx>=0){S.selected.splice(idx,1);el.classList.remove('selected');}
+  else{
+    if(S.selected.length>=32){showToast('⚠️ 최대 32종까지 선택 가능해요');return;}
+    S.selected.push({icon,name,type});el.classList.add('selected');
+  }
+  updateSlots();
+}
+function buildSlots(){
+  document.getElementById('slotGrid').innerHTML=Array.from({length:32},(_,i)=>`
+    <div class="slot" id="slot${i}"><span style="font-size:10px;color:var(--text-light)">${i+1}</span></div>`).join('');
+}
+function updateSlots(){
+  document.getElementById('slotCount').textContent=S.selected.length+' / 32';
+  for(let i=0;i<32;i++){
+    const slot=document.getElementById('slot'+i);
+    if(i<S.selected.length){
+      const item=S.selected[i];
+      slot.className='slot filled';
+      slot.innerHTML='<span class="s-icon">'+item.icon+'</span><span class="s-name">'+item.name+'</span>';
+    }else{
+      slot.className='slot';
+      slot.innerHTML='<span style="font-size:10px;color:var(--text-light)">'+(i+1)+'</span>';
+    }
+  }
+}
+
+function updateSummary(){
+  const el=document.getElementById('summaryContent');if(!el)return;
+  const charLabel=S.l3||S.l2||'-';
+  const name=document.getElementById('charName')?.value||'';
+  const emos=S.selected.filter(x=>x.type==='emo').map(x=>x.name);
+  const sits=S.selected.filter(x=>x.type==='sit').map(x=>x.name);
+  el.innerHTML=`
+    <div class="summary-row"><span class="sk">캐릭터</span><span class="sv">${charLabel}${name?' · '+name:''}</span></div>
+    <div class="summary-row"><span class="sk">스타일</span><span class="sv">${S.mood}</span></div>
+    <div class="summary-row"><span class="sk">색상</span><span class="sv">${S.color}</span></div>
+    <div class="summary-row"><span class="sk">비율</span><span class="sv">${S.ratio}</span></div>
+    <div class="summary-row"><span class="sk">배경</span><span class="sv">${S.bgLabel||'투명/흰색'}</span></div>
+    <div class="summary-row"><span class="sk">선택 종수</span><span class="sv">${S.selected.length}종 / 32종</span></div>
+    ${emos.length?'<div class="summary-row" style="flex-direction:column;align-items:flex-start;gap:6px"><span class="sk">감정</span><div class="summary-tags">'+emos.map(e=>'<span class="summary-tag">'+e+'</span>').join('')+'</div></div>':''}
+    ${sits.length?'<div class="summary-row" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:4px"><span class="sk">상황</span><div class="summary-tags">'+sits.map(s=>'<span class="summary-tag" style="background:rgba(147,51,234,0.1);color:var(--accent2)">'+s+'</span>').join('')+'</div></div>':''}
+  `;
+}
+
+// ── 룰베이스 프롬프트 템플릿 ────────────────────────────────────
+const STYLE_MAP = {
+  '파스텔 소프트': 'soft pastel colors, gentle watercolor tones, round edges, dreamy atmosphere, light pink and cream palette',
+  '수채화 느낌': 'watercolor illustration style, soft brush strokes, light color washes, hand-painted texture',
+  '리본 러블리': 'lovely ribbon decorations, pink and white tones, sparkle effects, heart accents, kawaii aesthetic',
+  '미니멀 플랫': 'minimal flat design, clean simple lines, bold outlines, limited color palette, geometric shapes',
+  '네온 팝아트': 'neon pop-art colors, bold black outlines, vibrant high-contrast, retro comic style',
+  '레트로 픽셀': 'retro pixel art style, 16-bit aesthetic, limited pixel palette, chunky pixelated design'
+};
+
+const RATIO_MAP = {
+  '2등신 (극단적 치비)': '2-head ratio chibi, extremely large head, tiny body, super deformed SD style',
+  '2.5등신 (일반 치비)': '2.5-head ratio chibi, large round head, small cute body, classic chibi proportions',
+  '3등신 (약간 큰 머리)': '3-head ratio, slightly oversized head, balanced cute proportions'
+};
+
+const MOOD_MAP = {
+  '밝고 활발': 'energetic and cheerful personality, bright happy expression, lively pose',
+  '차분하고 귀여운': 'calm and gentle personality, soft sweet expression, relaxed pose',
+  '엉뚱하고 개성있는': 'quirky unique personality, funny surprised expression, dynamic pose',
+  '따뜻하고 포근한': 'warm cozy personality, soft gentle smile, comfortable relaxed pose',
+  '쿨하고 시크한': 'cool and stylish personality, confident expression, sleek pose',
+  '몽글몽글 순진한': 'innocent and dreamy personality, wide sparkly eyes, gentle shy expression'
+};
+
+const EMO_TEMPLATE = {
+  '기쁨':       { face:'big bright smile, rosy cheeks, crescent eyes, eyebrows raised happily', body:'arms raised in joy, jumping or bouncing, sparkles around', ko:'눈이 반달모양으로 휘어짐, 두 볼에 홍조, 양팔 번쩍 들고 점프하는 포즈' },
+  '폭소':       { face:'wide open laughing mouth, tears of joy, eyes closed in laughter', body:'leaning back or falling over laughing, hands on belly', ko:'입을 크게 벌리고 웃음, 눈물 흘림, 배 잡고 뒤로 젖히는 포즈' },
+  '슬픔':       { face:'big teardrop eyes, drooping eyebrows, small sad mouth', body:'slumped shoulders, head down, hands holding cheeks', ko:'눈에 큰 눈물방울, 눈썹 축 처짐, 어깨 처지고 고개 숙인 포즈' },
+  '화남':       { face:'furrowed angry eyebrows, gritted teeth, red face, steam from head', body:'fists clenched, stomping pose, anger vein symbol', ko:'눈썹 V자로 찌푸림, 이 악물기, 얼굴 빨개짐, 주먹 쥐고 발 구르는 포즈' },
+  '사랑':       { face:'heart-shaped eyes, blushing cheeks, gentle smile, floating hearts', body:'hands clasped together, leaning forward dreamily', ko:'눈이 하트모양, 두 볼 붉게 물듦, 손 모아쥐고 앞으로 기울인 포즈' },
+  '졸림':       { face:'half-closed drowsy eyes, small yawn mouth, sleepy expression', body:'drooping head, Zzz symbols floating, eyes barely open', ko:'눈 반쯤 감김, 하품하는 입, 머리가 꾸벅꾸벅 조는 포즈' },
+  '고민':       { face:'one eyebrow raised, thoughtful eyes looking up, small mouth', body:'hand on chin thinking pose, head tilted slightly', ko:'한쪽 눈썹 올라감, 턱에 손 짚고 생각하는 포즈, 물음표 떠있음' },
+  '당황':       { face:'wide surprised eyes, open mouth, sweat drops, pale expression', body:'hands raised in panic, stepping back', ko:'눈 동그랗게 뜨기, 입 벌림, 식은땀, 뒷걸음치는 포즈' },
+  '신남':       { face:'wide excited eyes, big grin, star sparkles around face', body:'fists pumped, energetic jumping pose, confetti around', ko:'눈 초롱초롱, 입 크게 벌려 웃음, 주먹 불끈 쥐고 점프' },
+  '대성통곡':   { face:'crying river of tears, scrunched up crying face, wailing mouth wide open', body:'on knees or collapsed, arms flailing', ko:'눈에서 폭포처럼 눈물, 입 크게 벌려 울부짖는 포즈' },
+  '쿨함':       { face:'half-lidded cool eyes, slight smirk, sunglasses optional', body:'leaning casually, one hand on hip, relaxed confident pose', ko:'눈 반쯤 감은 시크한 표정, 한손 허리에 얹고 여유로운 포즈' },
+  '설렘':       { face:'sparkling excited eyes, rosy flushed cheeks, small hopeful smile', body:'hands pressed to cheeks, leaning forward, butterflies around', ko:'눈에 반짝이, 양손으로 볼 감싸기, 앞으로 살짝 기울인 설레는 포즈' },
+  '억울함':     { face:'teary frustrated eyes, pouting lips, vein mark', body:'fists at sides, stomping, protest gesture', ko:'억울한 눈물, 입술 삐죽, 두 주먹 불끈 쥐고 발 구르는 포즈' },
+  '귀찮음':     { face:'flat unamused expression, heavy lidded eyes, deadpan face', body:'slouched body, head resting on hand, limp posture', ko:'눈 반쯤 감고 무표정, 한쪽 뺨에 손 받치고 늘어진 포즈' },
+  '충격':       { face:'huge shocked eyes, jaw dropped, shocked hair standing up', body:'frozen stiff pose, arms out, lightning bolt symbols', ko:'눈 최대한 크게 뜨기, 입 쩍 벌림, 머리카락 곤두서는 포즈' },
+  '감탄':       { face:'wide admiring eyes, open mouth in awe, sparkles and stars', body:'hands clasped in admiration, leaning forward', ko:'눈에 별빛, 입 벌려 감탄, 손 모으고 앞으로 기울이는 포즈' },
+  '맛있다':     { face:'happy tasting expression, tongue out, hearts, drooly smile', body:'hands on cheeks, wiggling with delight', ko:'혀 내밀고 맛있다는 표정, 양손으로 볼 감싸고 몸 흔드는 포즈' },
+  '지루함':     { face:'flat bored expression, half-closed eyes, mouth slightly open', body:'chin resting on hands, slumped at table or standing droopily', ko:'눈 반쯤 감고 지루한 표정, 뺨에 손 받치고 늘어진 포즈' },
+  '녹아내림':   { face:'melting happy face, loopy eyes, goofy smile', body:'body melting downward like puddle, arms drooping', ko:'몸이 녹아내리듯 흘러내리는 포즈, 눈이 빙글빙글' },
+  '수줍음':     { face:'deeply blushing red cheeks, averted shy eyes, small smile', body:'hands twisting together, leaning inward shyly', ko:'뺨 빨개짐, 눈 살짝 피하고, 손 모으고 몸 안으로 오므린 포즈' },
+  '천사같음':   { face:'angelic pure expression, halo above head, sweet smile', body:'hands together in prayer, small angel wings', ko:'머리 위에 후광, 작은 날개, 두 손 모으고 천사같은 표정' },
+  '울컥함':     { face:'eyes welling with emotional tears, trembling lips, moved expression', body:'hand over heart, touched emotional gesture', ko:'감동의 눈물이 맺힘, 가슴에 손 얹고 감격한 포즈' },
+  '민망함':     { face:'embarrassed red face, awkward forced smile, sweat drops', body:'scratching back of head, looking away awkwardly', ko:'얼굴 빨개지고, 머리 긁적이며 시선 돌리는 민망한 포즈' },
+  '멘붕':       { face:'blank empty stare, mind broken expression, spiral eyes', body:'standing stiff and empty, question marks everywhere', ko:'눈이 소용돌이, 멍한 표정, 온몸이 굳어버린 포즈, 물음표 가득' },
+  '돈욕심':     { face:'greedy sparkling eyes, big grin, money symbols in eyes', body:'hands reaching out greedily, money bags or coins around', ko:'눈에 돈 기호, 양손 앞으로 내밀고 욕심스러운 표정' },
+  '포근함':     { face:'soft warm smile, gentle half-moon eyes, rosy warm cheeks', body:'arms hugging self or outstretched for hug', ko:'따뜻한 미소, 두 팔로 자신을 감싸거나 포옹하는 포즈' },
+  '뿌듯함':     { face:'proud satisfied smile, chest puffed, confident bright eyes', body:'hands on hips proud pose, sparkles of achievement', ko:'가슴 쫙 펴고 손 허리에, 뿌듯한 미소의 자신감 넘치는 포즈' },
+  '결의다짐':   { face:'determined serious eyes, firm expression, fist raised', body:'salute or fist pump, strong stance', ko:'눈에 결의, 주먹을 불끈 쥐어올리거나 경례하는 다짐 포즈' },
+  '신기함':     { face:'wide curious eyes tilted head, mouth open in wonder', body:'leaning forward curiously, finger pointing at something', ko:'고개 갸웃, 눈 동그랗게, 손가락으로 가리키며 신기해하는 포즈' },
+  '자신만만':   { face:'confident smirk, half-lidded self-assured eyes, chin up', body:'arms crossed or thumbs up, leaning back coolly', ko:'눈 살짝 감고 자신만만한 표정, 팔짱 끼거나 엄지 치켜세우기' },
+  '감동':       { face:'moved teary bright eyes, hand to mouth, overwhelmed expression', body:'both hands over heart, overwhelmed emotional pose', ko:'감동으로 눈물 맺힘, 두 손을 가슴에 얹은 감동받은 포즈' },
+  '할말없음':   { face:'silent blank expression, flat line mouth, empty stare', body:'both arms dropped, speechless frozen pose', ko:'입이 일자, 아무 표정없이 얼어붙은 포즈, 양팔 축 늘어짐' },
+};
+
+const SIT_TEMPLATE = {
+  '인사하기':     { action:'waving hand cheerfully, friendly greeting gesture', pose:'hand raised in wave, bright welcoming expression', ko:'손 흔들며 인사, 밝은 표정으로 반갑게 맞이하는 포즈' },
+  '응원하기':     { action:'cheering with pompoms or fists raised, enthusiastic support', pose:'jumping cheer pose, victory energy', ko:'응원 도구 들고 점프하거나 주먹 불끈 쥐고 파이팅 외치는 포즈' },
+  '축하하기':     { action:'throwing confetti, holding celebration banner or balloons', pose:'festive celebration pose, party popper', ko:'폭죽 터뜨리거나 풍선 들고 축하하는 파티 포즈' },
+  '감사하기':     { action:'deep bow or hands pressed together thankfully', pose:'grateful bowing pose, warm smile', ko:'두 손 모아 감사 인사하거나 꾸벅 인사하는 포즈' },
+  '사과하기':     { action:'bowing deeply apologetically, hands pressed together sorry', pose:'apologetic hunched pose, sorry expression', ko:'두 손 모으고 깊이 사과하는 포즈, 미안한 표정' },
+  '화해하기':     { action:'extending hand for handshake, peace gesture, olive branch', pose:'friendly reconciliation pose, relieved smile', ko:'화해의 악수 또는 평화 제스처, 화해하는 포즈' },
+  '전화하기':     { action:'holding phone to ear, talking on phone', pose:'phone call gesture, chatting expression', ko:'전화기 귀에 대고 통화하는 포즈' },
+  '메시지보내기': { action:'typing on phone, sending message with flying envelope', pose:'texting pose, phone in hands', ko:'스마트폰으로 메시지 보내는 포즈, 날아가는 편지 봉투' },
+  '밥먹기':       { action:'eating with chopsticks or spoon, food bowl in front', pose:'happy eating pose, food enjoyment expression', ko:'젓가락이나 숟가락으로 맛있게 먹는 포즈' },
+  '커피마시기':   { action:'holding coffee cup with both hands, sipping happily', pose:'cozy coffee drinking pose, warm content expression', ko:'두 손으로 커피잔 감싸고 홀짝이는 따뜻한 포즈' },
+  '달리기':       { action:'running in motion, arms and legs pumping, speed lines', pose:'dynamic running pose, energetic movement', ko:'두 팔 다리 힘차게 움직이며 달리는 역동적인 포즈' },
+  '자기':         { action:'sleeping with Zzz, curled up cozy, eyes closed peacefully', pose:'sleeping pose, dreamy peaceful expression', ko:'눈 감고 Zzz 떠오르며 편안하게 자는 포즈' },
+  '게임하기':     { action:'holding game controller, intense gaming expression', pose:'gaming pose, controller in hands, focused', ko:'게임 컨트롤러 들고 집중해서 플레이하는 포즈' },
+  '공부하기':     { action:'reading book or studying at desk, pencil in hand', pose:'studious pose, books or notes around', ko:'책상에서 책 펼쳐놓고 공부하는 포즈, 연필 들고' },
+  '일하기':       { action:'working at computer or with papers, busy work expression', pose:'working pose, laptop or documents', ko:'노트북 앞에서 일하거나 서류 들고 바쁜 포즈' },
+  '쇼핑하기':     { action:'carrying shopping bags happily, browsing with excitement', pose:'shopping spree pose, bags in both hands', ko:'양손에 쇼핑백 들고 신나게 쇼핑하는 포즈' },
+  '음악듣기':     { action:'wearing headphones, swaying to music, musical notes around', pose:'music listening pose, eyes closed enjoying', ko:'헤드폰 쓰고 음악에 맞춰 흔들리는 포즈, 음표 떠있음' },
+  '굿나잇':       { action:'sleepy wave goodnight, holding pillow or teddy bear', pose:'sleepy goodnight pose, pajamas optional', ko:'졸린 눈으로 잘자 손 흔들기, 베개나 인형 들고' },
+  '생일파티':     { action:'blowing birthday candles, holding cake, party hat on', pose:'birthday celebration pose, festive and happy', ko:'생일 케이크 들고 촛불 끄거나, 파티 모자 쓴 축하 포즈' },
+  '여행가기':     { action:'carrying luggage or backpack, map in hand, excited traveler', pose:'travel adventure pose, suitcase or backpack', ko:'여행 가방 끌거나 배낭 메고 설레는 여행 출발 포즈' },
+  '아프기':       { action:'holding head or stomach, sick expression, thermometer', pose:'sick tired pose, bandage or medicine nearby', ko:'머리나 배 잡고 아파하는 포즈, 체온계나 반창고' },
+  '스트레칭':     { action:'stretching arms above head, morning stretch pose', pose:'stretching exercise pose, energetic and refreshed', ko:'두 팔 머리 위로 쭉 뻗어 스트레칭하는 포즈' },
+  '라면먹기':     { action:'slurping ramen noodles happily, chopsticks in bowl', pose:'noodle eating pose, steam rising from bowl', ko:'라면 그릇 앞에서 젓가락으로 면발 후루룩 먹는 포즈' },
+  '사진찍기':     { action:'holding camera or phone taking photo, photographer pose', pose:'photography pose, camera in hand', ko:'카메라나 폰으로 사진 찍는 포즈' },
+  '드라이브':     { action:'holding steering wheel, driving with fun expression', pose:'driving pose, wind in hair, road trip vibes', ko:'핸들 잡고 드라이브하는 포즈, 신나는 표정' },
+  '선물주기':     { action:'holding wrapped gift box, presenting with both hands', pose:'gift giving pose, happy generous expression', ko:'포장된 선물 상자를 두 손으로 내미는 포즈' },
+  '청소하기':     { action:'sweeping with broom or mopping, cleaning motion', pose:'cleaning chore pose, broom or mop in hand', ko:'빗자루나 대걸레 들고 열심히 청소하는 포즈' },
+  '산책하기':     { action:'walking leisurely, enjoying nature, light steps', pose:'casual stroll pose, relaxed happy walk', ko:'가볍게 산책하는 여유로운 걷는 포즈' },
+  '미용실가기':   { action:'sitting in salon chair, getting hair done, mirror reflection', pose:'hair salon pose, cape on shoulders', ko:'미용실 의자에 앉아 머리 손질받는 포즈' },
+  '목욕하기':     { action:'in bathtub with bubbles, rubber duck, bath time fun', pose:'happy bath time pose, bubbles around', ko:'욕조에서 버블 목욕하는 행복한 포즈, 고무 오리와 함께' },
+  '꽃구경':       { action:'admiring flowers, holding flower bouquet, nature appreciation', pose:'flower viewing pose, petals floating around', ko:'꽃을 바라보거나 꽃다발 들고 꽃구경하는 포즈' },
+  '아이스크림':   { action:'licking ice cream cone happily, summer treat enjoyment', pose:'ice cream eating pose, dripping cone', ko:'아이스크림 콘 들고 핥아먹는 행복한 포즈' },
+};
+
+function buildRulePrompt(charLabel, emoSit, charName, charFeat) {
+  const styleDesc = STYLE_MAP[S.style] || STYLE_MAP['파스텔 소프트'];
+  const ratioDesc = RATIO_MAP[S.ratio] || RATIO_MAP['2.5등신 (일반 치비)'];
+  const moodDesc  = MOOD_MAP[S.mood]   || MOOD_MAP['밝고 활발'];
+  const colorDesc = S.color;
+  const bgDesc    = S.bgType === '투명 배경' ? 'transparent background'
+                  : S.bgType === '흰색 배경'  ? 'pure white background'
+                  : S.bgType === '단색 파스텔 배경' ? `solid pastel background color: ${S.bgLabel}`
+                  : S.bgType === '그라디언트 배경'  ? `gradient background: ${S.bgLabel}`
+                  : `${S.bgLabel} pattern background`;
+
+  const charCore = `cute chibi ${charLabel} character${charName?' named '+charName:''}, ${ratioDesc}, ${moodDesc}, color palette: ${colorDesc}${charFeat?', '+charFeat:''}`;
+  const styleCore = `${styleDesc}, kakaotalk emoticon style, 360x360px square, ${bgDesc}, PNG format, thick clean outlines, high quality illustration`;
+
+  const template = EMO_TEMPLATE[emoSit.name] || SIT_TEMPLATE[emoSit.name];
+  if (!template) {
+    return {
+      en: `${charCore}, ${emoSit.name} expression and pose, ${styleCore}`,
+      ko: `${charLabel}가 "${emoSit.name}" 표현을 하는 포즈로 그려주세요.`
+    };
+  }
+  const actionDesc = template.face ? `${template.face}, ${template.body}` : `${template.action}, ${template.pose}`;
+  return {
+    en: `${charCore}, ${actionDesc}, ${styleCore}`,
+    ko: template.ko || ''
+  };
+}
+
+function generatePrompts(){
+  if(!S.l2){showToast('⚠️ 카테고리를 선택해주세요');return;}
+  if(S.selected.length===0){showToast('⚠️ 감정/상황을 선택해주세요');return;}
+
+  const charName = document.getElementById('charName')?.value||'';
+  const charFeat = document.getElementById('charFeature')?.value||'';
+  const charLabel = S.l3||S.l2;
+
+  // 생성 범위에 따라 항목 결정
+  let targets = S.selected;
+  if(S.range === '마스터 캐릭터 1종') targets = [{icon:'⭐', name:'기본 포즈', type:'master'}];
+  else if(S.range === '5개씩 묶음') targets = S.selected.slice(0,5);
+
+  const list = document.getElementById('promptList');
+  list.innerHTML = '';
+
+  if(S.range === '마스터 캐릭터 1종'){
+    // 마스터 캐릭터 기본 포즈
+    const styleDesc = STYLE_MAP[S.style]||STYLE_MAP['파스텔 소프트'];
+    const ratioDesc = RATIO_MAP[S.ratio]||RATIO_MAP['2.5등신 (일반 치비)'];
+    const bgDesc = S.bgType==='투명 배경'?'transparent background':S.bgType==='흰색 배경'?'pure white background':`${S.bgLabel} background`;
+    const en = `cute chibi ${charLabel} character${charName?' named '+charName:''}, ${ratioDesc}, ${MOOD_MAP[S.mood]||''}, color palette: ${S.color}${charFeat?', '+charFeat:''}, neutral front-facing pose, default standing pose, ${styleDesc}, kakaotalk emoticon style, 360x360px square, ${bgDesc}, thick clean outlines, reference sheet style, high quality`;
+    const ko = `마스터 캐릭터 기본 정면 포즈. ${charLabel}${charName?' ('+charName+')':''}의 기본 서있는 모습. 이 1장을 완성한 뒤 복사해서 32종 표정/포즈 변형에 사용하세요.`;
+    renderSinglePrompt('MASTER', '마스터 캐릭터', en, ko);
+  } else {
+    targets.forEach((item, idx) => {
+      const result = buildRulePrompt(charLabel, item, charName, charFeat);
+      renderSinglePrompt(idx+1, item.icon+' '+item.name, result.en, result.ko);
+    });
+  }
+
+  // 리크레프트 작업 팁 추가
+  const tipEl = document.createElement('div');
+  tipEl.className = 'guide-tip';
+  tipEl.style.cssText = 'background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);margin-top:4px;';
+  tipEl.innerHTML = '<span class="gt-icon">✏️</span><div><strong style="color:var(--step4)">리크레프트 작업 순서</strong><br>① 마스터 캐릭터 1종 완성 → ② 레이어 복사 → ③ 표정/팔/다리 레이어만 수정 → ④ 배경 투명 PNG 내보내기 → ⑤ 360×360px 확인 후 카카오 제출</div>';
+  list.appendChild(tipEl);
+
+  document.getElementById('outputArea').style.display='block';
+  document.getElementById('outputArea').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderSinglePrompt(num, label, en, ko){
+  const list = document.getElementById('promptList');
+  const item = document.createElement('div');
+  item.className = 'prompt-item';
+  item.innerHTML = `
+    <div class="prompt-item-header">
+      <span class="prompt-num">PROMPT ${num}</span>
+      <span class="prompt-emo-tag">${label}</span>
+      <button class="p-copy-btn">📋 복사</button>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-en">${en}</div>
+      ${ko?'<div class="prompt-ko">🖊️ 리크레프트 가이드: '+ko+'</div>':''}
+    </div>
+    <div class="kakao-spec-bar">
+      <span class="spec-tag">360×360px</span>
+      <span class="spec-tag">PNG 투명배경</span>
+      <span class="spec-tag">치비 스타일</span>
+      <span class="spec-tag">${S.style}</span>
+    </div>`;
+  const copyBtn = item.querySelector('.p-copy-btn');
+  copyBtn.addEventListener('click', ()=>copyText(en));
+  list.appendChild(item);
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>showToast('✅ 복사됐어요!'));
+}
+function copyAll(){
+  const texts=[...document.querySelectorAll('.prompt-en')].map(el=>el.textContent).join('\n\n---\n\n');
+  navigator.clipboard.writeText(texts).then(()=>showToast('✅ 전체 프롬프트 복사됐어요!'));
+}
+function resetAll(){
+  S.step=1;S.l1=null;S.l2=null;S.l3=null;S.selected=[];
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel1').classList.add('active');
+  document.getElementById('outputArea').style.display='none';
+  buildL1();
+  document.getElementById('l2List').innerHTML='<div class="cat-empty">← 대분류를 먼저 선택하세요</div>';
+  document.getElementById('l3List').innerHTML='<div class="cat-empty" style="width:100%">← 소분류를 선택하세요</div>';
+  document.querySelectorAll('.emo-card').forEach(c=>c.classList.remove('selected'));
+  buildSlots();updateWfUI();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function init(){
+  buildWfSteps();
+  buildStepNav();
+  buildL1();
+  buildOptionChips('moodChips',MOODS,'mood');
+  buildOptionChips('colorChips',COLORS,'color');
+  buildOptionChips('ratioChips',RATIOS,'ratio');
+  buildBgChips();
+  buildEmotions();
+  buildSituations();
+  buildSlots();
+  buildOptionChips('styleChips',STYLES,'style');
+  buildOptionChips('langChips',LANGS,'lang');
+  buildOptionChips('rangeChips',RANGES,'range');
+  updateMasterPreview();
+  ['charName','charFeature','charMemo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',updateMasterPreview);
+  });
+}
+
+init();updateWfUI();
+</script>
+</body>
+</html>
